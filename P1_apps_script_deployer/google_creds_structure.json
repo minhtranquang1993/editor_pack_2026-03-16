@@ -1,0 +1,14 @@
+{
+  "installed": {
+    "client_id": "870669444583-cj9l4it6bbb6196e27iov8ep34dcevc2.apps.googleusercontent.com",
+    "project_id": "learn-sql-365610",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret": "<<KEEP_EXISTING>>",
+    "redirect_uris": [
+      "http://localhost"
+    ],
+    "client_id_note": "Keep exact values, do not change"
+  }
+}

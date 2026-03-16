@@ -1,0 +1,150 @@
+{
+  "version": "1.0.0",
+  "mems": [
+    {
+      "id": "mem_1771613400000_a1b2",
+      "shelf": "decisions",
+      "content": "minai93 provider case-sensitive với model ID — phải dùng lowercase: gpt-5.3-codex (không phải GPT-5.3-Codex)",
+      "tags": [
+        "openclaw",
+        "config",
+        "model-id",
+        "minai93"
+      ],
+      "session_date": "2026-02-20",
+      "created_at": 1771613400000
+    },
+    {
+      "id": "mem_1771613401000_c3d4",
+      "shelf": "decisions",
+      "content": "Multi-agent phòng ban workflow: PLAN(opus) → MAIN(sonnet) + SUB(haiku) → QA(codex). Skip plan nếu task nhẹ, skip QA nếu output đơn giản.",
+      "tags": [
+        "workflow",
+        "multi-agent",
+        "architecture",
+        "openclaw"
+      ],
+      "session_date": "2026-02-20",
+      "created_at": 1771613401000
+    },
+    {
+      "id": "mem_1771613402000_e5f6",
+      "shelf": "config",
+      "content": "minai93 API: base_url=https://minai93.duckdns.org/v1, key=minai93-key-1. Models: gpt-5.3-codex, gpt-5.2",
+      "tags": [
+        "api-key",
+        "config",
+        "minai93",
+        "model"
+      ],
+      "session_date": "2026-02-20",
+      "created_at": 1771613402000
+    },
+    {
+      "id": "mem_1771613403000_g7h8",
+      "shelf": "patterns",
+      "content": "AWF-inspired skill pattern: mỗi skill là 1 SKILL.md file trong workspace/skills/[name]/. Bao gồm: trigger, execution logic, output format, fallback.",
+      "tags": [
+        "skill",
+        "pattern",
+        "openclaw",
+        "awf"
+      ],
+      "session_date": "2026-02-20",
+      "created_at": 1771613403000
+    },
+    {
+      "id": "mem_1771613404000_i9j0",
+      "shelf": "solutions",
+      "content": "Fix model không switch được: check cả openclaw.json (workspace) VÀ agents/main/agent/models.json — cả 2 file đều cần sửa đồng bộ.",
+      "tags": [
+        "openclaw",
+        "config",
+        "fix",
+        "model"
+      ],
+      "session_date": "2026-02-20",
+      "created_at": 1771613404000
+    },
+    {
+      "id": "mem_1771620000000_fb01",
+      "shelf": "config",
+      "content": "Facebook Ads: token EAAM7bV...HeYQ (expires ~21/04/2026), act_1465106504558065, DND Sài Gòn, VND. App 909765848719908.",
+      "tags": [
+        "facebook-ads",
+        "api-key",
+        "config",
+        "dnd",
+        "ads-report"
+      ],
+      "session_date": "2026-02-20",
+      "created_at": 1771620000000
+    },
+    {
+      "id": "mem_1771620001000_tt01",
+      "shelf": "config",
+      "content": "TikTok Ads: token f713ebc06c..., advertiser_id=7571369176603000833, DND Sài Gòn, VND. data_level=AUCTION_ADVERTISER cho reports.",
+      "tags": [
+        "tiktok-ads",
+        "api-key",
+        "config",
+        "dnd",
+        "ads-report"
+      ],
+      "session_date": "2026-02-20",
+      "created_at": 1771620001000
+    },
+    {
+      "id": "mem_1771620002000_gg01",
+      "shelf": "config",
+      "content": "Google Ads: refresh_token 1//0fDqi..., main account 9437588564 DND Sài Gòn. SDK google-ads Python, cost_micros/1_000_000=VND. Basic access.",
+      "tags": [
+        "google-ads",
+        "api-key",
+        "config",
+        "dnd",
+        "ads-report"
+      ],
+      "session_date": "2026-02-20",
+      "created_at": 1771620002000
+    },
+    {
+      "id": "mem_1771620003000_ads1",
+      "shelf": "patterns",
+      "content": "Ads report pattern: FB dùng graph.facebook.com/v21.0/{act}/insights, TikTok dùng /report/integrated/get/ với data_level=AUCTION_ADVERTISER, GG dùng GoogleAdsClient.load_from_dict + GAQL query.",
+      "tags": [
+        "ads-report",
+        "pattern",
+        "facebook-ads",
+        "tiktok-ads",
+        "google-ads"
+      ],
+      "session_date": "2026-02-20",
+      "created_at": 1771620003000
+    },
+    {
+      "id": "mem_1772115603272_blog1",
+      "shelf": "patterns",
+      "content": "Workflow blog CV: anh gửi link YouTube/Reddit -> Ní tóm & viết blog (mặc định tiếng Việt, giọng \"Minh\", 300-500 chữ) -> gửi anh duyệt -> anh OK mới publish Supabase. Blog hỗ trợ 2 ngôn ngữ VI/EN. Mọi claim dựa trên kinh nghiệm cá nhân phải cross-check CV trước khi viết để tránh sai fact.",
+      "tags": [
+        "blog-cv",
+        "workflow",
+        "content",
+        "supabase",
+        "vi-en",
+        "fact-check"
+      ],
+      "session_date": "2026-02-26",
+      "created_at": 1772115603272
+    }
+  ],
+  "shelves": {
+    "decisions": 2,
+    "patterns": 3,
+    "errors": 0,
+    "solutions": 1,
+    "context": 0,
+    "config": 4
+  },
+  "updated_at": "2026-02-26T14:20:03Z"
+}
