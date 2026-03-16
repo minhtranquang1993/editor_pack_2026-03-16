@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+memory/
+test_workspace/
+.codex-review/

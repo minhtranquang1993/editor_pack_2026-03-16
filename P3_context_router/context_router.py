@@ -52,6 +52,11 @@ KEYWORD_MAP = [
         "pack": "packs/ops-heartbeat.md",
         "type_aliases": ["heartbeat", "ops"]
     },
+    {
+        "keywords": ["memory", "kb", "knowledge base", "recall", "save mem", "persistent", "rag", "ingest", "index"],
+        "pack": "packs/memory-context.md",
+        "type_aliases": ["memory", "kb"]
+    },
 ]
 
 # Pre-compile word-boundary patterns for every keyword
@@ -119,7 +124,7 @@ def main():
                         help="Free-text task description")
     parser.add_argument("--type", dest="task_type", type=str, default=None,
                         choices=["marketing", "seo", "content", "automation",
-                                 "security", "heartbeat", "ops"],
+                                 "security", "heartbeat", "ops", "memory", "kb"],
                         help="Task type shorthand")
     parser.add_argument("--json", action="store_true",
                         help="Output results as JSON")

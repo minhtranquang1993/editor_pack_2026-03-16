@@ -190,6 +190,9 @@ _core_checks = {
     'ads_budget_pacing': lambda: _check_import_skip('skills/ads-budget-pacing/scripts/ads_budget_pacing.py'),
     'lead_monitor': lambda: _check_import_skip('skills/lead-monitor/scripts/lead_monitor.py'),
     'report_ads': lambda: _check_report_ads_syntax(),
+    'context_router_route': lambda: _check_import_skip('tools/context_router.py'),
+    'quality_drift_no_dup': lambda: _check_import_skip('tools/quality_drift_detector.py'),
+    'mem_manager_syntax': lambda: _check_import_skip('skills/persistent-memory/scripts/mem_manager.py'),
 }
 
 # --- Runtime checks (--runtime mode) ---
@@ -200,6 +203,30 @@ def _verify_callable(attr_name):
             return ('PASS', f'import ok + {attr_name}() found')
         return ('WARN', f'import ok but {attr_name}() not found')
     return _verify
+
+
+def _verify_context_router(mod):
+    """Verify context_router routes marketing tasks correctly."""
+    if not hasattr(mod, 'route') or not callable(mod.route):
+        return ('WARN', 'import ok but route() not found')
+    result = mod.route(task_text="check facebook ads anomaly")
+    result_str = str(result) if not isinstance(result, str) else result
+    if 'packs/marketing.md' not in result_str:
+        return ('FAIL', f'marketing pack missing for ads task; got: {result_str[:100]}')
+    if 'AGENTS-CORE.md' not in result_str:
+        return ('FAIL', f'AGENTS-CORE.md missing; got: {result_str[:100]}')
+    return ('PASS', 'route ok: marketing + AGENTS-CORE')
+
+
+def _verify_quality_drift_no_dup(mod):
+    """Verify METRIC_NAMES has no duplicates."""
+    if not hasattr(mod, 'METRIC_NAMES'):
+        return ('WARN', 'import ok but METRIC_NAMES not found')
+    names = mod.METRIC_NAMES
+    if len(names) != len(set(names)):
+        dups = [n for n in names if names.count(n) > 1]
+        return ('FAIL', f'duplicate metrics: {dups}')
+    return ('PASS', f'no duplicates ({len(names)} metrics)')
 
 
 _runtime_checks = {
@@ -222,6 +249,12 @@ _runtime_checks = {
     'lead_monitor': lambda: _check_import_runtime_skip(
         'skills/lead-monitor/scripts/lead_monitor.py'),
     'report_ads': lambda: _check_report_ads_runtime(),
+    'context_router_route': lambda: _check_import_runtime_skip(
+        'tools/context_router.py', _verify_context_router),
+    'quality_drift_no_dup': lambda: _check_import_runtime_skip(
+        'tools/quality_drift_detector.py', _verify_quality_drift_no_dup),
+    'mem_manager_syntax': lambda: _check_import_skip(
+        'skills/persistent-memory/scripts/mem_manager.py'),
 }
 
 # --- Test-only checks (excluded from default runs) ---

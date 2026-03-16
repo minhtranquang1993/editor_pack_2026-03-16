@@ -28,7 +28,6 @@ METRIC_NAMES = [
     "tool_call_count",
     "fail_rate",
     "contradiction_flags",
-    "tool_calls_count",
     "task_completed",
     "session_duration_min",
 ]
@@ -39,7 +38,6 @@ METRIC_UNITS = {
     "tool_call_count": "",
     "fail_rate": "%",
     "contradiction_flags": "",
-    "tool_calls_count": "",
     "task_completed": "",
     "session_duration_min": "m",
 }
@@ -50,7 +48,6 @@ DRIFT_DESCRIPTIONS = {
     "tool_call_count": {"up": "dùng nhiều tool hơn bình thường", "down": "dùng ít tool hơn"},
     "fail_rate": {"up": "tỷ lệ fail tăng", "down": "tỷ lệ fail giảm (tốt)"},
     "contradiction_flags": {"up": "output mâu thuẫn tăng", "down": "output nhất quán hơn (tốt)"},
-    "tool_calls_count": {"up": "số tool calls tăng", "down": "số tool calls giảm"},
     "task_completed": {"up": "nhiều task hoàn thành hơn", "down": "ít task hoàn thành hơn"},
     "session_duration_min": {"up": "session dài hơn", "down": "session ngắn hơn"},
 }
@@ -320,10 +317,10 @@ def main():
         metric_values = {
             "output_length": args.output_length,
             "revision_rounds": args.revision_rounds,
-            "tool_call_count": args.tool_call_count,
+            "tool_call_count": args.tool_call_count if args.tool_call_count is not None
+                               else (args.tool_calls if args.tool_calls is not None else 0),
             "fail_rate": args.fail_rate,
             "contradiction_flags": args.contradiction_flags,
-            "tool_calls_count": args.tool_calls if args.tool_calls is not None else 1,
             "task_completed": True,
             "session_duration_min": args.duration_min if args.duration_min is not None else 0,
         }

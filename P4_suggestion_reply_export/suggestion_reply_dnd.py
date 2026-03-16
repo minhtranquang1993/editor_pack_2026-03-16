@@ -9,6 +9,7 @@ Usage:
   python3 tools/suggestion_reply_dnd.py --query "giá phẫu thuật cận thị"
   python3 tools/suggestion_reply_dnd.py --stats
   python3 tools/suggestion_reply_dnd.py --export-csv [--output output.csv]
+  python3 tools/suggestion_reply_dnd.py --export-json [--output output.json]
   python3 tools/suggestion_reply_dnd.py --rebuild-fts
 """
 
@@ -40,6 +41,7 @@ TOKEN_FILE = os.path.join(WORKSPACE, "credentials", "fb_page_token.txt")
 DB_PATH = os.path.join(WORKSPACE, "memory", "suggestion_reply_dnd.db")
 SCHEMA_FILE = os.path.join(WORKSPACE, "skills", "suggestion-reply-dnd", "scripts", "schema.sql")
 CSV_DEFAULT_OUTPUT = os.path.join(WORKSPACE, "memory", "suggestion_reply_export.csv")
+JSON_DEFAULT_OUTPUT = os.path.join(WORKSPACE, "memory", "suggestion_reply_export.json")
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -452,6 +454,57 @@ def cmd_export_csv(output: str):
     print(f"✅ Exported {len(rows)} messages to {output}")
 
 
+def cmd_export_json(output: str):
+    """Export all conversations with messages to JSON."""
+    print("⚠️  JSON chứa thông tin khách hàng — không chia sẻ hoặc commit vào Git", file=sys.stderr)
+    conn = get_db()
+
+    # Get all conversations
+    try:
+        convs = conn.execute(
+            "SELECT id, participant_name, participant_id, message_count, last_updated FROM conversations ORDER BY last_updated DESC"
+        ).fetchall()
+    except sqlite3.OperationalError as e:
+        print(f"❌ DB chưa có dữ liệu — chạy --init trước: {e}", file=sys.stderr)
+        conn.close()
+        return
+
+    data = []
+    for conv in convs:
+        conv_id = conv["id"]
+        # Get messages for this conversation
+        msgs = conn.execute(
+            """SELECT from_name, is_admin, message, created_time
+               FROM messages
+               WHERE conversation_id = ?
+               ORDER BY created_time ASC""",
+            (conv_id,),
+        ).fetchall()
+
+        messages = []
+        for m in msgs:
+            messages.append({
+                "from_name": m["from_name"],
+                "is_admin": bool(m["is_admin"]),
+                "message": m["message"],
+                "created_time": m["created_time"],
+            })
+
+        data.append({
+            "conversation_id": conv_id,
+            "participant_name": conv["participant_name"],
+            "message_count": conv["message_count"],
+            "last_updated": conv["last_updated"],
+            "messages": messages,
+        })
+
+    conn.close()
+    os.makedirs(os.path.dirname(os.path.abspath(output)), exist_ok=True)
+    with open(output, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2, default=str)
+    print(f"✅ Exported {len(data)} conversations to {output}")
+
+
 def _rebuild_fts_index(conn: sqlite3.Connection):
     """Rebuild the FTS5 index from scratch using current messages table."""
     conn.execute("DELETE FROM messages_fts")
@@ -483,6 +536,7 @@ def main():
     group.add_argument("--query", type=str, help="Search conversations by keyword")
     group.add_argument("--stats", action="store_true", help="Show DB stats")
     group.add_argument("--export-csv", action="store_true", help="Export to CSV")
+    group.add_argument("--export-json", action="store_true", help="Export to JSON")
     group.add_argument("--rebuild-fts", action="store_true", help="Rebuild FTS index")
 
     parser.add_argument("--limit", type=int, default=DEFAULT_CRAWL_LIMIT, help="Max conversations to crawl")
@@ -501,6 +555,9 @@ def main():
         cmd_stats()
     elif args.export_csv:
         cmd_export_csv(args.output)
+    elif args.export_json:
+        output = args.output if args.output != CSV_DEFAULT_OUTPUT else JSON_DEFAULT_OUTPUT
+        cmd_export_json(output)
     elif args.rebuild_fts:
         cmd_rebuild_fts()
 
